@@ -1,0 +1,127 @@
+// ==UserScript==
+// @name         Cursor Mod Menu with Cool Features
+// @namespace    Script Runner Pro
+// @version      0.1
+// @description  A mod menu that follows your cursor with cool features
+// @author       NexusFusion
+// @match        *://*/*
+// @grant        GM_addStyle
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Styles for the mod menu
+    const modMenuStyles = `
+        #modMenu {
+            position: fixed;
+            top: 50px;
+            left: 50px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            cursor: move;
+            transition: opacity 0.3s ease-in-out; /* Added transition for smooth hiding */
+        }
+        #modMenu h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid white;
+            padding-bottom: 5px;
+            cursor: default;
+        }
+        .modOption {
+            margin-bottom: 10px;
+        }
+        .modOption label {
+            display: block;
+            cursor: pointer;
+        }
+        .modOption input[type="checkbox"] {
+            margin-right: 5px;
+        }
+    `;
+
+    // Inject styles
+    const styleElement = document.createElement('style');
+    styleElement.textContent = modMenuStyles;
+    document.head.appendChild(styleElement);
+
+    // Create the mod menu container
+    const menuContainer = document.createElement('div');
+    menuContainer.id = 'modMenu';
+    document.body.appendChild(menuContainer);
+
+    // Create and inject the mod menu HTML
+    const modMenuHTML = `
+        <h2>Cursor Mod Menu with Cool Features</h2>
+        <div class="modOption">
+            <label><input type="checkbox" id="changeCursorStyleCheckbox"> Change Cursor Style</label>
+        </div>
+        <div class="modOption">
+            <label><input type="checkbox" id="nightModeCheckbox"> Night Mode</label>
+        </div>
+        <div class="modOption">
+            <label><input type="checkbox" id="backgroundImageCheckbox"> Background Image</label>
+        </div>
+        <div class="modOption">
+            <label><input type="checkbox" id="fontStyleCheckbox"> Font Style</label>
+        </div>
+        <div class="modOption">
+            <label><input type="checkbox" id="hideImagesCheckbox"> Hide Images</label>
+        </div>
+        <div class="modOption">
+            <label><input type="checkbox" id="autoScrollCheckbox"> Auto-scroll</label>
+        </div>
+        <div class="modOption">
+            <label><input type="checkbox" id="popupBlockerCheckbox"> Popup Blocker</label>
+        </div>
+        <div class="modOption">
+            <label><input type="checkbox" id="customCssCheckbox"> Custom CSS Injector</label>
+        </div>
+        <div class="modOption">
+            <label><input type="checkbox" id="darkModeToggleCheckbox"> Dark Mode Toggle</label>
+        </div>
+        <div class="modOption">
+            <label><input type="checkbox" id="elementHighlighterCheckbox"> Element Highlighter</label>
+        </div>
+    `;
+    menuContainer.innerHTML = modMenuHTML;
+
+    // Functionality for each checkbox can be implemented here...
+
+    // Update menu position based on cursor movement
+    document.addEventListener('mousemove', (event) => {
+        const menu = document.getElementById('modMenu');
+        menu.style.left = (event.pageX + 10) + 'px';
+        menu.style.top = (event.pageY + 10) + 'px';
+    });
+
+    // Make the mod menu draggable
+    let offsetX, offsetY;
+
+    menuContainer.addEventListener('mousedown', startDrag);
+
+    function startDrag(e) {
+        e.preventDefault();
+        offsetX = e.clientX - menuContainer.getBoundingClientRect().left;
+        offsetY = e.clientY - menuContainer.getBoundingClientRect().top;
+        document.addEventListener('mousemove', dragMenu);
+        document.addEventListener('mouseup', stopDrag);
+    }
+
+    function dragMenu(e) {
+        menuContainer.style.left = e.clientX - offsetX + 'px';
+        menuContainer.style.top = e.clientY - offsetY + 'px';
+    }
+
+    function stopDrag() {
+        document.removeEventListener('mousemove', dragMenu);
+        document.removeEventListener('mouseup', stopDrag);
+    }
+
+})();
